@@ -17,18 +17,18 @@ link_directories(${ZSTD_LIBRARY_DIRS})
 # Agregar fuentes
 add_executable(storage 
     src/main.cpp
-    src/MarketData.h
-    src/LiveDataGenerator.h
+    include/MarketData.h
+    include/LiveDataGenerator.h
     src/LiveDataGenerator.cpp
-    src/LiveDataCollector.h
+    include/LiveDataCollector.h
     src/LiveDataCollector.cpp
-    src/ThreadSafeQueue.h
+    include/ThreadSafeQueue.h
     src/ThreadSafeQueue.cpp
-    src/BufferedWriter.h
+    include/BufferedWriter.h
     src/BufferedWriter.cpp
-    src/DataWriter.h
+    include/DataWriter.h
     src/DataWriter.cpp
-    src/HistoricalDataReader.h
+    include/HistoricalDataReader.h
     src/HistoricalDataReader.cpp
 )
 

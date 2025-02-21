@@ -44,7 +44,6 @@ void DataWriter :: writeData(const std::vector<MarketData> &data) {
     std::vector<std::string> redundantDirectories = getRedundantDirectories();
 
     for (const auto& dir : redundantDirectories) {
-        std::cout << "Redundant directory: " << dir << std::endl;
 
         // Construct the full file path using directory and generated file name
         std::string finalFileName = dir + "/" + getFileName();
@@ -284,9 +283,6 @@ void DataWriter :: createDirectories(const std::vector<std::string>& directories
 std::vector<std::string> DataWriter::getRedundantDirectories() {
     std::vector<std::string> result;
 
-    // Print initial redundancy level for debugging purposes
-    std::cout << "Getting redundant directories - redundancyLevel: " << _redundancyLevel << std::endl;
-
     // If there are no output directories or redundancy level is zero, return empty result
     if (_outputDirectories.empty() || _redundancyLevel <= 0) {
         return result;
@@ -294,7 +290,6 @@ std::vector<std::string> DataWriter::getRedundantDirectories() {
 
     // Adjust redundancy level to not exceed available number of directories
     _redundancyLevel = std::min(_redundancyLevel, static_cast<int>(_outputDirectories.size()));
-    std::cout << "Adjusted redundant directories - redundancyLevel: " << _redundancyLevel << std::endl;
 
     // Create a copy of output directories and shuffle them to ensure random selection
     std::vector<std::string> shuffledDirs = _outputDirectories;

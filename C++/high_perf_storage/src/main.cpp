@@ -107,6 +107,8 @@ int main() {
         runningFlag = false;
         std::cerr << "Error: " << e.what() << std::endl;
     }
+
+    std::cout << "Starting historical data reader..." << std::endl;
     
     // Read and display historical data if available
     for (const auto& dataRecord : historicalDataReader.readAll()) {
