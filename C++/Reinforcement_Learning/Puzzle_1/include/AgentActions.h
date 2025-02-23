@@ -1,7 +1,7 @@
 #ifndef AGENT_ACTIONS
 #define AGENT_ACTIONS
 
-enum AgentAction {
+enum AgentActions {
     move_up,
     move_down,
     move_left,

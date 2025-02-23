@@ -1,16 +1,16 @@
 #ifndef AGENT
 #define AGENT
 
-#include "AgentAction.h"
-#include "PuzzleGrid.h"
+#include "AgentActions.h"
+#include "IGrid.h"
 
 class Agent {
     private:
-        PuzzleGrid* _puzzleGrid;
+        IGrid* _grid;
 
     public:
-        Agent(PuzzleGrid* puzzleGrid);
-        AgentAction nextMove(bool trainning = false);
+        Agent(IGrid* grid);
+        AgentActions nextMove(bool trainning = false);
 };
 
 #endif

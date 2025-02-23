@@ -1,19 +1,22 @@
-#include "Agent.h"
-#include "AgentAction.h"
+#include <cstdlib>
 
-Agent :: Agent(PuzzleGrid* puzzleGrid) : _puzzleGrid(puzzleGrid)
+#include "Agent.h"
+#include "AgentActions.h"
+#include "IGrid.h"
+
+Agent :: Agent(IGrid* grid) : _grid(grid)
 {
 }
 
-AgentAction Agent :: nextMove(bool trainning)
+AgentActions Agent :: nextMove(bool trainning)
 {
     if (trainning) {
-        AgentAction nextAction = (AgentAction)(rand() % 4);
-        _puzzleGrid->moveAgent(nextAction);
+        AgentActions nextAction = (AgentActions)(rand() % 4);
+        _grid->moveAgent(nextAction);
         return nextAction;
     } else {
-        AgentAction nextAction = (AgentAction)(rand() % 4);
-        _puzzleGrid->moveAgent(nextAction);
+        AgentActions nextAction = (AgentActions)(rand() % 4);
+        _grid->moveAgent(nextAction);
         return nextAction;
     }
 }

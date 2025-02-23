@@ -4,29 +4,29 @@
 #include <ctime>
 #include <unistd.h> // Para usleep
 
-#include "PuzzleGrid.h"
+#include "Grid.h"
 #include "Rewards.h"
-#include "AgentAction.h"
+#include "AgentActions.h"
 
-void PuzzleGrid :: resetColor()
+void Grid :: resetColor()
 {
     std::cout << "\033[0m";
 }
 
-void PuzzleGrid :: drawCell(int x, int y, RGBColor rgbColor, char value)
+void Grid :: drawCell(int x, int y, RGBColor rgbColor, char value)
 {
     std::cout << "\033[" << y + 1 << ";" << x * 3 + 1 << "H"; // Ajuste para alinear correctamente
     std::cout << "\033[38;2;" << rgbColor.red << ";" << rgbColor.green << ";" << rgbColor.blue << "m"; //set text color
     std::cout << value;
 }
 
-PuzzleGrid :: PuzzleGrid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed) :
+Grid :: Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed) :
     _gridSize(gridSize), _difficultyLevel(difficultyLevel), _grid(std::vector<std::vector<int>>(gridSize, std::vector<int>(gridSize, 0))), _actionSpeed(actionSpeed)
 {
     
 }
 
-void PuzzleGrid :: Reset() {
+void Grid :: Reset() {
     for (int i = 0; i < _gridSize; ++i) {
         for (int j = 0; j < _gridSize; ++j) {
             _grid[i][j] = 0;
@@ -34,7 +34,7 @@ void PuzzleGrid :: Reset() {
     }
 }
 
-void PuzzleGrid :: initialize()
+void Grid :: initialize()
 {
     srand(time(0));
     if (_difficultyLevel == DifficultyLevel::Easy_1) {
@@ -54,22 +54,22 @@ void PuzzleGrid :: initialize()
     _grid[_agentPosition.first][_agentPosition.second] = 1;           // Marcar la posición inicial como visitada
 }
 
-bool PuzzleGrid :: isTarget(std::pair<int, int> Position)
+bool Grid :: isTarget(std::pair<int, int> Position)
 {
     return _targetPosition.first == Position.first && _targetPosition.second == Position.second;
 }
 
-std::pair<int, int> PuzzleGrid :: getAgentPosition() {
+std::pair<int, int> Grid :: getAgentPosition() {
     return _agentPosition;
 }
 
-Rewards PuzzleGrid :: moveAgent(AgentAction agentAction)
+Rewards Grid :: moveAgent(AgentActions agentAction)
 {
     int newX = _agentPosition.first, newY = _agentPosition.second;
-    if (agentAction == AgentAction::move_up) newX--;
-    else if (agentAction == AgentAction::move_down) newX++;
-    else if (agentAction == AgentAction::move_left) newY--;
-    else if (agentAction == AgentAction::move_right) newY++;
+    if (agentAction == AgentActions::move_up) newX--;
+    else if (agentAction == AgentActions::move_down) newX++;
+    else if (agentAction == AgentActions::move_left) newY--;
+    else if (agentAction == AgentActions::move_right) newY++;
 
     // Verificar límites
     if (newX < 0 || newX >= _gridSize || newY < 0 || newY >= _gridSize) {
@@ -96,7 +96,7 @@ Rewards PuzzleGrid :: moveAgent(AgentAction agentAction)
 }
 
 // Mostrar la cuadrícula
-void PuzzleGrid :: displayGrid(bool isTraining) {
+void Grid :: displayGrid(bool isTraining) {
     std::cout << "\033[2J\033[H"; // Limpiar la pantalla
     for (int i = 0; i < _gridSize; ++i) {
         for (int j = 0; j < _gridSize; ++j) {
@@ -125,4 +125,27 @@ void PuzzleGrid :: displayGrid(bool isTraining) {
     if (!isTraining) {
         usleep(_actionSpeed * 1000);
     }
+}
+
+void Grid :: TrainAgent(Agent *agent, int trainingEpisodes) {
+    for (int episode = 0; episode < trainingEpisodes; ++episode) {
+        initialize();
+        displayGrid();
+        while (!isTarget(getAgentPosition())) {
+            agent->nextMove(true);
+            displayGrid();
+        }
+    }
+}
+
+void Grid::TestAgent(Agent *agent)
+{
+    initialize();
+    displayGrid(false);
+    Reset();
+    while (!isTarget(getAgentPosition())) {
+        agent->nextMove();
+        displayGrid(false);
+    }
+    std::cout << "Test finished." << std::endl;
 }

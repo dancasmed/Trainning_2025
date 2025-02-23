@@ -6,18 +6,9 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wpedantic")
 
 # Agregar fuentes
 add_executable(solution 
-    include/AgentAction.h
-    include/DifficultyLevel.h
-    include/Rewards.h
-    include/RGBColor.h
-
-    include/Agent.h
     src/Agent.cpp
-    include/PuzzleGrid.h
-    src/PuzzleGrid.cpp
-    
+    src/Grid.cpp
     src/main.cpp
-
 )
 
 # Incluir directorios
