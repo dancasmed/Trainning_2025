@@ -6,7 +6,7 @@
 
 class IGrid {
     public:
-    virtual Rewards moveAgent(AgentActions agentAction) = 0;
+        virtual Rewards moveAgent(AgentActions agentAction) = 0;
 };
 
 #endif

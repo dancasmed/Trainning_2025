@@ -2,10 +2,10 @@
 #define AGENT_ACTIONS
 
 enum AgentActions {
-    move_up,
-    move_down,
-    move_left,
-    move_right
+    Move_up,
+    Move_down,
+    Move_left,
+    Move_right
 };
 
 #endif

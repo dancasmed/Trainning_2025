@@ -2,9 +2,9 @@
 #define REWARDS
 
 enum Rewards {
-    reached_target = 1000,
-    regular_move = -1,
-    invalid_move = -5,
+    Reached_target = 1000,
+    Regular_move = -1,
+    Invalid_move = -5,
 };
 
 #endif

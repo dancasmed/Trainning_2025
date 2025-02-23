@@ -4,7 +4,7 @@
 #include <vector>
 #include "RGBColor.h"
 #include "DifficultyLevel.h"
-#include "Agent.h"
+#include "IAgent.h"
 #include "AgentActions.h"
 #include "IGrid.h"
 #include "Rewards.h"
@@ -20,17 +20,16 @@ class Grid : public IGrid {
 
         void resetColor();
         void drawCell(int x, int y, RGBColor rgbColor, char value);
-        void Reset();
+        void reset();
         void initialize();
         bool isTarget(std::pair<int, int> Position);
-        std::pair<int, int> getAgentPosition();
         void displayGrid(bool isTraining = true);
         
     public:
         Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed);
         Rewards moveAgent(AgentActions agentAction) override;
-        void TrainAgent(Agent *agent, int trainingEpisodes);
-        void TestAgent(Agent* agent);
+        void trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid);
+        void testAgent(IAgent* agent);
 };
 
 #endif

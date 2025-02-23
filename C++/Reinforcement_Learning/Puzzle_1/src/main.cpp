@@ -5,26 +5,27 @@
 #include <unistd.h> // Para usleep
 
 #include <Grid.h>
-#include "Agent.h"
+#include "IAgent.h"
+#include "Agent_Random.h"
 #include "AgentActions.h"
 
 using namespace std;
 
 // Tamaño de la cuadrícula
-const int GRID_SIZE = 5;
+const int GRID_SIZE = 7;
 const int TRAINNING_EPISODES = 1000;
 const int TEST_SPEED = 250; //milliseconds
+const bool SHOW_GRID_WHILE_TRAINING = false;
 
 int main() {
-    IGrid* grid = new Grid(GRID_SIZE, DifficultyLevel::VeryEasy, TEST_SPEED);
-    Agent agent(grid);
+    Grid* grid = new Grid(GRID_SIZE, DifficultyLevel::VeryEasy, TEST_SPEED);
+    IAgent* agent1 = new Agent_Random(grid);    
 
     cout << "Entrenando al agente..." << endl;
-    ((Grid*)grid)->TrainAgent(&agent, TRAINNING_EPISODES);
-    
+    grid->trainAgent(agent1, TRAINNING_EPISODES, SHOW_GRID_WHILE_TRAINING);
 
     cout << "Probando al agente..." << endl;
-    ((Grid*)grid)->TestAgent(&agent);
+    grid->testAgent(agent1);
 
     cout << "¡Entrenamiento y prueba completados!" << endl;
     return 0;

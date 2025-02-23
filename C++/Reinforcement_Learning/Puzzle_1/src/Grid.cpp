@@ -7,6 +7,7 @@
 #include "Grid.h"
 #include "Rewards.h"
 #include "AgentActions.h"
+#include "IAgent.h"
 
 void Grid :: resetColor()
 {
@@ -26,7 +27,7 @@ Grid :: Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed) :
     
 }
 
-void Grid :: Reset() {
+void Grid :: reset() {
     for (int i = 0; i < _gridSize; ++i) {
         for (int j = 0; j < _gridSize; ++j) {
             _grid[i][j] = 0;
@@ -59,21 +60,17 @@ bool Grid :: isTarget(std::pair<int, int> Position)
     return _targetPosition.first == Position.first && _targetPosition.second == Position.second;
 }
 
-std::pair<int, int> Grid :: getAgentPosition() {
-    return _agentPosition;
-}
-
 Rewards Grid :: moveAgent(AgentActions agentAction)
 {
     int newX = _agentPosition.first, newY = _agentPosition.second;
-    if (agentAction == AgentActions::move_up) newX--;
-    else if (agentAction == AgentActions::move_down) newX++;
-    else if (agentAction == AgentActions::move_left) newY--;
-    else if (agentAction == AgentActions::move_right) newY++;
+    if (agentAction == AgentActions::Move_up) newX--;
+    else if (agentAction == AgentActions::Move_down) newX++;
+    else if (agentAction == AgentActions::Move_left) newY--;
+    else if (agentAction == AgentActions::Move_right) newY++;
 
     // Verificar límites
     if (newX < 0 || newX >= _gridSize || newY < 0 || newY >= _gridSize) {
-        return Rewards::invalid_move; // Movimiento inválido
+        return Rewards::Invalid_move; // Movimiento inválido
     }
 
     // Actualizar la posición del agente
@@ -81,7 +78,7 @@ Rewards Grid :: moveAgent(AgentActions agentAction)
     _grid[newX][newY]++; // Incrementar el contador de visitas
 
     if (isTarget(_agentPosition)) {
-        return Rewards::reached_target;
+        return Rewards::Reached_target;
     }
 
     // Se asegura de que solo las casillas con mas de visitas sean visibles
@@ -92,7 +89,7 @@ Rewards Grid :: moveAgent(AgentActions agentAction)
             }
         }
     }
-    return Rewards::regular_move;
+    return Rewards::Regular_move;
 }
 
 // Mostrar la cuadrícula
@@ -127,25 +124,30 @@ void Grid :: displayGrid(bool isTraining) {
     }
 }
 
-void Grid :: TrainAgent(Agent *agent, int trainingEpisodes) {
+void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
     for (int episode = 0; episode < trainingEpisodes; ++episode) {
         initialize();
-        displayGrid();
-        while (!isTarget(getAgentPosition())) {
+        agent->start();
+        while (!isTarget(_agentPosition)) {
             agent->nextMove(true);
-            displayGrid();
+            if (showGrid) {
+                displayGrid();
+            }
         }
+        agent->stop();
     }
 }
 
-void Grid::TestAgent(Agent *agent)
+void Grid :: testAgent(IAgent* agent)
 {
     initialize();
     displayGrid(false);
-    Reset();
-    while (!isTarget(getAgentPosition())) {
+    reset();
+    agent->start();
+    while (!isTarget(_agentPosition)) {
         agent->nextMove();
         displayGrid(false);
     }
+    agent->stop();
     std::cout << "Test finished." << std::endl;
 }
