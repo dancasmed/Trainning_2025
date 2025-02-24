@@ -11,19 +11,18 @@
 
 class Grid : public IGrid {
     private:
-        const int _gridSize;
         const DifficultyLevel _difficultyLevel;
         std::vector<std::vector<int>> _grid;
         int _actionSpeed; //milliseconds
-        std::pair<int, int> _agentPosition;
         std::pair<int,int> _targetPosition;
 
         void resetColor();
         void drawCell(int x, int y, RGBColor rgbColor, char value);
-        void reset();
+        void resetVisitsMatrix();
         void initialize();
         bool isTarget(std::pair<int, int> Position);
         void displayGrid(bool isTraining = true);
+        void updateVisitsMatrix();
         
     public:
         Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed);

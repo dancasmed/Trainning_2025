@@ -1,6 +1,6 @@
 # Reinforcement Learning?
 
-DeepSeek took everyone by surprise weeks ago with the LLM DeepSeek_R1. To create this model, they improved and developed multiple techniques, one of which is related to the way they trained the model: Reinforcement Learning (RL). They used a **Group Relative Policy Optimization (GRPO)** algorithm. I got curious about this and decided to dedicate part of my training to learning about RL algorithms. I will implement different RL algorithms to solve pathfinding problems.
+DeepSeek took everyone by surprise weeks ago with the LLM DeepSeek_R1. To create this model, they improved and developed multiple techniques, one of which is related to the way they trained the model: Reinforcement Learning (RL). They used a **Group Relative Policy Optimization (GRPO)** algorithm. I got curious about this and decided to dedicate part of my training to learning about RL algorithms. I will implement different RL algorithms to generate solutions to different use cases.
 
 ## What is Reinforcement Learning (RL)?
 

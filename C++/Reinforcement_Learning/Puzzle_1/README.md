@@ -1,112 +1,185 @@
-# Programming Puzzle: Grid Navigation Agent 1
+# Reinforcement Learning Grid Agent Project
 
-## Problem Description
+This project implements a reinforcement learning environment where an agent learns to navigate a grid to reach a target position . The project includes two types of agents: `Agent_Qlearning` (a Q-learning-based agent) and `Agent_Random` (a random-action agent). The environment is defined by a grid with configurable difficulty levels, size, and speed of execution. Visit this page for more details about the puzzle to be solved, [Puzzle details](Puzzle.md).
 
-You are tasked with simulating an agent that learns to navigate a N x N grid to reach a target location. Each cell in the grid represents a state, and the agent can move in four possible directions: **up**, **down**, **left**, or **right**. The goal is for the agent to learn the optimal path from its starting position to the target position.
+## Table of Contents
 
-### Rules of the Grid
-1. N >= 1 and N <= 30
-2. The grid has dimensions **N x N** (indexed from `(0, 0)` to `(N, N)`).
-3. The agent starts at a position on the grid depending on the puzzle difficulty level.
-   - Very easy, Starts at (0, 0)
-   - Easy 1, Starts at (Random, Random)
-   - Easy 2, Starts at (0, 0)
-   - Medium, Starts at (Random, Random)
-4. The target is located at a position on the grid depending on the puzzle difficulty level.
-   - Very easy, Agent starts at (0, 0) and Target is at (N, N)
-   - Easy 1, Target is located at (N, N)
-   - Easy 2, Target is located at (Random, Random)
-   - Medium, Target is located at (Random, Random)
-5. The agent can move one step in any of the four directions: **up**, **down**, **left**, or **right**.
-6. If the agent attempts to move outside the boundaries of the grid, it remains in its current position.
-7. The agent receives:
-   - A reward of **+100** for reaching the target.
-   - A reward of **-1** for each step taken to encourage efficiency.
-   - A reward of **-5** for attempting to move outside the grid boundaries.
-
-### Objective
-Implement a program that allows the agent to learn how to navigate the grid using reinforcement learning techniques. The agent should eventually learn the shortest path to the target.
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [Building the Project](#building-the-project)
+- [Running the Project](#running-the-project)
+- [Code Overview](#code-overview)
+  - [Agent Classes](#agent-classes)
+  - [Grid Class](#grid-class)
+  - [Enums and Structs](#enums-and-structs)
+- [Training and Testing](#training-and-testing)
 
 ---
 
-## Requirements
+## Project Structure
 
-1. **Grid Representation**:
-   - Represent the grid as a 2D array or matrix where each cell corresponds to a state.
-   - Display the agent's current position and the target position visually (e.g., using symbols like `A` for the agent and `T` for the target).
-
-2. **Agent Actions**:
-   - Implement the four possible actions: **up**, **down**, **left**, and **right**.
-   - Ensure boundary checks so the agent cannot move outside the grid.
-
-3. **Reward System**:
-   - Implement the reward system as described above.
-   - Track the total reward accumulated by the agent during its journey.
-
-4. **Learning Algorithm**:
-   - Use one of the following reinforcement learning algorithms to train the agent:
-     ### Q-Learning
-     - **Description**: Q-Learning is a model-free RL algorithm that learns the value of actions in particular states without requiring a model of the environment. It updates the Q-value (expected future reward) for each state-action pair based on the observed reward and the maximum Q-value of the next state.
-     - **Key Features**:
-       - Model-free: Does not require knowledge of the environment's dynamics.
-       - Off-policy: Can learn the optimal policy while following a different behavior policy.
-     - **Advantages**:
-       - Simple to implement.
-       - Effective in discrete state and action spaces.
-     
-     ### Group Relative Policy Optimization (GRPO)
-     - **Description**: GRPO is a variant of policy optimization algorithms designed for multi-agent reinforcement learning scenarios. It focuses on optimizing policies relative to the performance of other agents in the group, enabling better coordination and competition among agents.
-     - **Key Features**:
-       - Relative performance metrics for multi-agent systems.
-       - Balances individual and group objectives.
-     - **Advantages**:
-       - Enhances cooperation or competition in multi-agent environments.
-       - Scalable to large groups of agents.
-     
-     ### Proximal Policy Optimization (PPO)
-     - **Description**: PPO is a policy optimization algorithm that improves upon earlier methods like TRPO (Trust Region Policy Optimization) by simplifying the optimization process while maintaining stability. It clips the objective function to prevent large policy updates, ensuring stable learning.
-     - **Key Features**:
-       - Clipped objective function for stable updates.
-       - Simple and efficient implementation.
-     - **Advantages**:
-       - Balances simplicity and performance.
-       - Widely used in practice due to its effectiveness.
-
-5. **Simulation**:
-   - Run multiple episodes of training where the agent starts at a random position and tries to reach the target.
-   - Visualize the agent's progress after each episode (e.g., print the grid with the agent's position).
-
-6. **Output**:
-   - After training, display the learned optimal path from a given starting position to the target.
-   - Print the total reward accumulated during the final episode.
+The project is organized into the following directories:
+```
+Puzzle_1/
+├── build/            # Compiled binaries and object files
+├── include/          # Header files (.h)
+├── src/              # Source files (.cpp)
+├── CMakeLists.txt    # CMake configuration file
+└── README.md         # This documentation file
+```
 
 ---
 
-## Example Input/Output
+## Dependencies
 
-### Initial Grid
+- **C++17 or later**: The code uses features from the C++17 standard.
+- **CMake**: Required for building the project.
+- **Standard Libraries**: The project relies on the C++ Standard Library (`<vector>`, `<random>`, `<iostream>`, etc.).
+
+---
+
+## Building the Project (Mac OS)
+
+To compile the project, follow these steps:
+
+1. Navigate to the `build` directory:
+   ```bash
+   cd Proyecto/build
+   ```
+2. Generate the Makefile using CMake:
 ```
-A . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . .
-. . . . . . . . . T
+cmake ..
+```
+Compile the project using `gmake`:
+```
+gmake
+```
+The compiled binary will be located in the `build` directory.
+
+## Running the Project 
+
+After building the project, you can run the executable: 
+```
+./solution
+```
+The program performs the following steps: 
+    
+1. Trains the `Agent_Qlearning` agent over a specified number of episodes.
+2. Tests the trained agent to evaluate its performance.
+3. Displays the results in the terminal.
+     
+
+You can configure the grid size, training episodes, and other parameters in the `main.cpp` file. 
+
+## Code Overview 
+### Agent Classes 
+`Agent_Qlearning`
+
+- Implements a Q-learning algorithm to train the agent.
+- Maintains a Q-table (`_qTable`) to store state-action values.
+- Uses an epsilon-greedy strategy for exploration-exploitation.
+   - Key methods:
+       - `nextMove(bool trainning)`: Determines the next action based on the training mode.
+       - `start()`: Initializes the agent's dynamic epsilon value.
+       - `stop()`: Decreases the epsilon value after each episode.
+         
+     
+`Agent_Random `
+
+- Implements a random-action policy for comparison.
+- Stores the best path found during training.
+- Key methods:
+    - nextMove(bool trainning): Selects a random action during training or follows the best path during testing.
+    - start(): Resets the agent's state before training or testing.
+    - stop(): Updates the best path and reward after training.
+         
+     
+
+### Grid Class 
+
+The `Grid` class defines the environment where the agent operates. It includes: 
+
+- A grid of configurable size (`_gridSize`).
+- Difficulty levels (`DifficultyLevel`) that determine the initial positions of the agent and target.
+- Methods to move the agent (`moveAgent`) and update the grid state (`updateVisitsMatrix`).
+- Visualization methods (`displayGrid`) to render the grid in the terminal.
+     
+
+### Enums and Structs 
+`AgentActions`
+
+Defines the possible actions an agent can take: 
+
+```cpp
+enum AgentActions {
+    Move_up,
+    Move_down,
+    Move_left,
+    Move_right
+};
 ```
 
+`Rewards`
 
-### Episode Progression
-- Episode 1: Agent takes 20 steps, total reward = -20.
-- Episode 100: Agent takes 12 steps, total reward = -12.
-- Episode 500: Agent takes 10 steps (optimal path), total reward = -10 + 100 = 90.
+Defines the rewards for different outcomes: 
+```cpp
+enum Rewards {
+    Reached_target = 1000,
+    Regular_move = -1,
+    Invalid_move = -5,
+};
+```
 
-### Final Output
+`RGBColor`
+
+Represents a color in RGB format: 
+```cpp
+struct RGBColor {
+    int red;
+    int green;
+    int blue;
+    RGBColor(int r, int g, int b) : red(r), green(g), blue(b) {}
+};
 ```
-Optimal Path:
-(0, 0) -> (1, 0) -> (2, 0) -> ... -> (9, 9)
-Total Reward: 90
+
+`DifficultyLevel`
+
+Specifies the difficulty levels for the grid: 
+```cpp
+enum DifficultyLevel {
+    VeryEasy,
+    Easy_1,
+    Easy_2,
+    Medium
+};
 ```
+
+### Training and Testing 
+#### Training 
+
+- The `trainAgent` method in the `Grid` class trains the agent over a specified number of episodes.
+- During training, the grid can optionally display the agent's movements in real-time (`SHOW_GRID_WHILE_TRAINING`).
+     
+
+#### Testing 
+
+- The `testAgent` method evaluates the trained agent's performance.
+- The grid visualization is displayed at a configurable speed (`TEST_SPEED`).
+     
+
+#### Configuration 
+
+You can modify the following parameters in `main.cpp`: 
+
+- `GRID_SIZE`: Size of the grid (default: 7).
+- `TRAINNING_EPISODES`: Number of training episodes (default: 1000).
+- `TEST_SPEED`: Speed of grid updates during testing (in milliseconds, default: 250).
+- `SHOW_GRID_WHILE_TRAINING`: Whether to display the grid during training (default: `true`).
+     
+
+### Notes 
+
+- Ensure that all header files are placed in the `include` directory and source files in the `src` directory.
+- Modify the `CMakeLists.txt` file if additional source files or libraries are added.
+- The project is designed for educational purposes and can be extended to include more complex environments, obstacles, or algorithms.
+     

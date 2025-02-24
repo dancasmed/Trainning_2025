@@ -1,8 +1,10 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <ctime>
 #include <unistd.h> // Para usleep
+#include <unordered_map>
 
 #include "Grid.h"
 #include "Rewards.h"
@@ -22,12 +24,15 @@ void Grid :: drawCell(int x, int y, RGBColor rgbColor, char value)
 }
 
 Grid :: Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed) :
-    _gridSize(gridSize), _difficultyLevel(difficultyLevel), _grid(std::vector<std::vector<int>>(gridSize, std::vector<int>(gridSize, 0))), _actionSpeed(actionSpeed)
+    IGrid(gridSize),
+    _difficultyLevel(difficultyLevel),
+    _grid(std::vector<std::vector<int>>(gridSize, std::vector<int>(gridSize, 0))),
+    _actionSpeed(actionSpeed)
 {
     
 }
 
-void Grid :: reset() {
+void Grid :: resetVisitsMatrix() {
     for (int i = 0; i < _gridSize; ++i) {
         for (int j = 0; j < _gridSize; ++j) {
             _grid[i][j] = 0;
@@ -83,12 +88,14 @@ Rewards Grid :: moveAgent(AgentActions agentAction)
 
     // Se asegura de que solo las casillas con mas de visitas sean visibles
     if (_grid[newX][newY] > 255) {
-        for (int i = 0; i < _gridSize; ++i) {
+        /*for (int i = 0; i < _gridSize; ++i) {
             for (int j = 0; j < _gridSize; ++j) {
                 _grid[i][j]--;
             }
-        }
+        }*/
+        updateVisitsMatrix();
     }
+    
     return Rewards::Regular_move;
 }
 
@@ -107,7 +114,11 @@ void Grid :: displayGrid(bool isTraining) {
                     drawCell(j, i, RGBColor{255, 255, 255}, '.');
                 } else {
                     if (isTraining) {
-                        int brightness = std::min(255, visits * 1); // Aumentar brillo con visitas
+                        int brightness = std::min(255, visits); // Aumentar brillo con visitas
+                        /*int brightness_1 = visits % 255 ;
+                        int brightness_2 = (visits - brightness_1) % 255;
+                        int brightness_3 = (visits - brightness_1 - brightness_2) % 255;
+                        */
                         drawCell(j, i, RGBColor{0, brightness, 0}, '*');
                     } else {
                         drawCell(j, i, RGBColor{0, 0, 255}, '*');
@@ -124,6 +135,39 @@ void Grid :: displayGrid(bool isTraining) {
     }
 }
 
+void Grid::updateVisitsMatrix()
+{
+    // Paso 1: Extraer todos los valores de la matriz
+    std::vector<int> allValues;
+    for (const auto& row : _grid) {
+        for (int value : row) {
+            allValues.push_back(value);
+        }
+    }
+
+    // Paso 2: Ordenar los valores de forma descendente y seleccionar los 255 mayores
+    std::sort(allValues.begin(), allValues.end(), std::greater<int>());
+    int numTopValues = std::min(255, (int)allValues.size());
+    std::vector<int> topValues(allValues.begin(), allValues.begin() + numTopValues);
+
+    // Paso 3: Crear un mapa para verificar rápidamente si un valor está en la lista de máximos
+    std::unordered_map<int, int> valueToIndexMap;
+    for (size_t i = 0; i < topValues.size(); ++i) {
+        valueToIndexMap[topValues[i]] = numTopValues - i; // Asignar índices empezando desde numTopValues
+    }
+
+    // Paso 4: Actualizar la matriz según las reglas dadas
+    for (auto& row : _grid) {
+        for (int& value : row) {
+            if (valueToIndexMap.find(value) != valueToIndexMap.end()) {
+                value = valueToIndexMap[value]; // Asignar el índice del valor en la lista
+            } else {
+                value = 0; // Asignar 0 si no está en la lista
+            }
+        }
+    }
+}
+
 void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
     for (int episode = 0; episode < trainingEpisodes; ++episode) {
         initialize();
@@ -132,6 +176,7 @@ void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
             agent->nextMove(true);
             if (showGrid) {
                 displayGrid();
+                usleep(1 * 500);
             }
         }
         agent->stop();
@@ -142,7 +187,7 @@ void Grid :: testAgent(IAgent* agent)
 {
     initialize();
     displayGrid(false);
-    reset();
+    resetVisitsMatrix();
     agent->start();
     while (!isTarget(_agentPosition)) {
         agent->nextMove();
