@@ -7,16 +7,12 @@
 #include "IAgent.h"
 #include "IGrid.h"
 
-class Agent_Random : public IAgent {
+class Agent_Empty : public IAgent {
     private:
-        std::vector<AgentActions> _bestPath;
-        std::vector<AgentActions> _currentLearnedPath;
-        int _bestReward;
-        int _currentReward;
-        int _pathIterator;
+        
 
     public:
-        Agent_Random(IGrid* grid);
+        Agent_Empty(IGrid* grid);
         AgentActions nextMove(bool trainning = false) override;
         void start() override;
         void stop() override;

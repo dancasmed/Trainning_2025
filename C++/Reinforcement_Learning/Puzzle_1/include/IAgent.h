@@ -12,7 +12,7 @@ class IAgent {
 
     public:
         IAgent(IGrid* grid);
-
+        virtual ~IAgent() = default; 
         virtual AgentActions nextMove(bool trainning = false) = 0;
         virtual void start() = 0;
         virtual void stop() = 0;

@@ -5,7 +5,8 @@ enum AgentActions {
     Move_up,
     Move_down,
     Move_left,
-    Move_right
+    Move_right,
+    NUM_ACTIONS // This value MUST BE THE LAST ONE
 };
 
 #endif

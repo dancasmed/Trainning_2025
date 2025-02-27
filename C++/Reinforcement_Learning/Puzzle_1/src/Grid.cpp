@@ -57,56 +57,38 @@ void Grid :: initialize()
         _agentPosition = {0, 0};
         _targetPosition = {_gridSize - 1, _gridSize - 1}; 
     }
-    _grid[_agentPosition.first][_agentPosition.second] = 1;           // Marcar la posición inicial como visitada
-}
-
-bool Grid :: isTarget(std::pair<int, int> Position)
-{
-    return _targetPosition.first == Position.first && _targetPosition.second == Position.second;
+    _grid[_agentPosition.x][_agentPosition.y] = 1;           // Marcar la posición inicial como visitada
+    _currentPath.clear();
+    _currentPath.emplace_back(_agentPosition);
 }
 
 Rewards Grid :: moveAgent(AgentActions agentAction)
 {
-    int newX = _agentPosition.first, newY = _agentPosition.second;
-    if (agentAction == AgentActions::Move_up) newX--;
-    else if (agentAction == AgentActions::Move_down) newX++;
-    else if (agentAction == AgentActions::Move_left) newY--;
-    else if (agentAction == AgentActions::Move_right) newY++;
+    Rewards newReward = rewardIfDo(agentAction);
+    Position newPosition = positionIfDo(agentAction);
 
-    // Verificar límites
-    if (newX < 0 || newX >= _gridSize || newY < 0 || newY >= _gridSize) {
-        return Rewards::Invalid_move; // Movimiento inválido
-    }
+    if (newReward != Rewards::Invalid_move) {
+       // Actualizar la posición del agente
+        _lastPosition = _agentPosition;
+        _agentPosition = newPosition;
+        _grid[newPosition.x][newPosition.y]++; // Incrementar el contador de visitas
 
-    // Actualizar la posición del agente
-    _agentPosition = {newX, newY};
-    _grid[newX][newY]++; // Incrementar el contador de visitas
-
-    if (isTarget(_agentPosition)) {
-        return Rewards::Reached_target;
-    }
-
-    // Se asegura de que solo las casillas con mas de visitas sean visibles
-    if (_grid[newX][newY] > 255) {
-        /*for (int i = 0; i < _gridSize; ++i) {
-            for (int j = 0; j < _gridSize; ++j) {
-                _grid[i][j]--;
-            }
-        }*/
-        updateVisitsMatrix();
+        // Se asegura de que solo las casillas con mas de visitas sean visibles
+        if (_grid[newPosition.x][newPosition.y] > 255) {
+            updateVisitsMatrix();
+        }
     }
     
-    return Rewards::Regular_move;
+    return newReward;
 }
 
 // Mostrar la cuadrícula
 void Grid :: displayGrid(bool isTraining) {
-    std::cout << "\033[2J\033[H"; // Limpiar la pantalla
     for (int i = 0; i < _gridSize; ++i) {
         for (int j = 0; j < _gridSize; ++j) {
-            if (i == _agentPosition.first && j == _agentPosition.second) {
+            if (i == _agentPosition.x && j == _agentPosition.y) {
                 drawCell(j, i, RGBColor{0, 255, 0}, 'A');
-            } else if (i == _targetPosition.first && j == _targetPosition.second) {
+            } else if (i == _targetPosition.x && j == _targetPosition.y) {
                 drawCell(j, i, RGBColor{255, 0, 0}, 'T');
             } else {
                 int visits = _grid[i][j];
@@ -114,11 +96,7 @@ void Grid :: displayGrid(bool isTraining) {
                     drawCell(j, i, RGBColor{255, 255, 255}, '.');
                 } else {
                     if (isTraining) {
-                        int brightness = std::min(255, visits); // Aumentar brillo con visitas
-                        /*int brightness_1 = visits % 255 ;
-                        int brightness_2 = (visits - brightness_1) % 255;
-                        int brightness_3 = (visits - brightness_1 - brightness_2) % 255;
-                        */
+                        int brightness = std::min(255, visits); // Aumentar brillo con visitas                        
                         drawCell(j, i, RGBColor{0, brightness, 0}, '*');
                     } else {
                         drawCell(j, i, RGBColor{0, 0, 255}, '*');
@@ -176,11 +154,12 @@ void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
             agent->nextMove(true);
             if (showGrid) {
                 displayGrid();
-                usleep(1 * 500);
             }
         }
         agent->stop();
+        std::cout<<"Finished step " << episode;
     }
+    resetColor(); // Restablecer el color después de imprimir
 }
 
 void Grid :: testAgent(IAgent* agent)
@@ -194,5 +173,6 @@ void Grid :: testAgent(IAgent* agent)
         displayGrid(false);
     }
     agent->stop();
+    resetColor(); // Restablecer el color después de imprimir
     std::cout << "Test finished." << std::endl;
 }

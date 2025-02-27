@@ -7,7 +7,7 @@ Agent_Random::Agent_Random(IGrid *grid) : IAgent(grid)
 AgentActions Agent_Random :: nextMove(bool trainning)
 {
     if (trainning) {
-        AgentActions nextAction = (AgentActions)(rand() % 4);
+        AgentActions nextAction = (AgentActions)(rand() % AgentActions::NUM_ACTIONS);
         _currentReward += _grid->moveAgent(nextAction);
         _currentLearnedPath.emplace_back(nextAction);
         return nextAction;
