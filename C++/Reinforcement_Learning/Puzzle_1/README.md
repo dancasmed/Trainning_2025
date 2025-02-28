@@ -93,6 +93,16 @@ You can configure the grid size, training episodes, and other parameters in the 
     - start(): Resets the agent's state before training or testing.
     - stop(): Updates the best path and reward after training.
          
+`Agent_GRPO `
+**Generalized Recursive Policy Optimiztion**  
+
+- Implements the GRPO algorithm for policy optimization with recursive reasoning.
+- Key Features:  
+    - Recursive policy evaluation mechanism
+    - Dynamic exploration-exploitation balancing
+    - Policy entropy regularization
+    - Support for continuous action spaces
+    - Gradient-based optimization with adaptive step sizes
      
 
 ### Grid Class 
@@ -115,7 +125,8 @@ enum AgentActions {
     Move_up,
     Move_down,
     Move_left,
-    Move_right
+    Move_right,
+    NUM_ACTIONS
 };
 ```
 
@@ -127,6 +138,7 @@ enum Rewards {
     Reached_target = 1000,
     Regular_move = -1,
     Invalid_move = -5,
+    Revisiting_Position = -10,
 };
 ```
 

@@ -16,11 +16,51 @@ void Grid :: resetColor()
     std::cout << "\033[0m";
 }
 
-void Grid :: drawCell(int x, int y, RGBColor rgbColor, char value)
-{
-    std::cout << "\033[" << y + 1 << ";" << x * 3 + 1 << "H"; // Ajuste para alinear correctamente
-    std::cout << "\033[38;2;" << rgbColor.red << ";" << rgbColor.green << ";" << rgbColor.blue << "m"; //set text color
-    std::cout << value;
+#include <iostream>
+#ifdef _WIN32
+#include <windows.h> // Para Windows
+#endif
+
+void Grid::drawCell(int x, int y, RGBColor rgbColor, char value) {
+#ifdef _WIN32
+    // Habilitar el modo VT100 (ANSI) en Windows si no está habilitado
+    static bool ansiEnabled = []() {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        DWORD dwMode = 0;
+        if (GetConsoleMode(hOut, &dwMode)) {
+            dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            return SetConsoleMode(hOut, dwMode);
+        }
+        return false;
+    }();
+
+    if (!ansiEnabled) {
+        // Si no se puede habilitar ANSI, usar la API de Windows para cambiar el color
+        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        int colorIndex = 0;
+        if (rgbColor.red > 128) colorIndex |= FOREGROUND_RED;
+        if (rgbColor.green > 128) colorIndex |= FOREGROUND_GREEN;
+        if (rgbColor.blue > 128) colorIndex |= FOREGROUND_BLUE;
+        SetConsoleTextAttribute(hConsole, colorIndex);
+
+        // Mover el cursor a la posición deseada
+        COORD coord = {static_cast<SHORT>(x * 3 + 1), static_cast<SHORT>(y)};
+        SetConsoleCursorPosition(hConsole, coord);
+
+        // Imprimir el valor
+        std::cout << value;
+
+        // Restablecer el color predeterminado
+        SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+        return;
+    }
+#endif
+
+    // Usar códigos ANSI para macOS/Linux o Windows con soporte ANSI habilitado
+    std::cout << "\033[" << y + 1 << ";" << x * 3 + 1 << "H"; // Mover el cursor a la posición deseada
+    std::cout << "\033[38;2;" << rgbColor.red << ";" << rgbColor.green << ";" << rgbColor.blue << "m"; // Cambiar el color del texto
+    std::cout << value; // Imprimir el valor
+    resetColor(); // Restablecer el color predeterminado
 }
 
 Grid :: Grid(int gridSize, DifficultyLevel difficultyLevel, int actionSpeed) :
@@ -147,7 +187,7 @@ void Grid::updateVisitsMatrix()
 }
 
 void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
-    for (int episode = 0; episode < trainingEpisodes; ++episode) {
+    for (int episode = 0; episode < trainingEpisodes; episode++) {
         initialize();
         agent->start();
         while (!isTarget(_agentPosition)) {
@@ -157,7 +197,8 @@ void Grid :: trainAgent(IAgent* agent, int trainingEpisodes, bool showGrid) {
             }
         }
         agent->stop();
-        std::cout<<"Finished step " << episode;
+        double progress = (100.00 / trainingEpisodes) * episode;
+        std::cout<<"Trainning progress: " << progress << "%";
     }
     resetColor(); // Restablecer el color después de imprimir
 }
