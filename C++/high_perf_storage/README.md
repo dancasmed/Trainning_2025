@@ -71,7 +71,7 @@ flowchart LR
 ## Getting Started
 ### Prerequisites
 
-   - C++17 compatible compiler
+   - C++23 compatible compiler
 
    - Zstandard library (libzstd-dev)
 
