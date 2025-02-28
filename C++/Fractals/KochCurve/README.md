@@ -6,7 +6,7 @@
 A C++ implementation of the Koch curve fractal using SFML graphics library. This program demonstrates recursive fractal generation through iterative line subdivision.
 
 ## Flow
-```
+```mermaid
 graph TD
     A[Start] --> B[Initialize Window & Initial Line]
     B --> C{Main Loop}
