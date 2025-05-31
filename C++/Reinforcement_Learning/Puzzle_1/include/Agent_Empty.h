@@ -16,6 +16,7 @@ class Agent_Empty : public IAgent {
         AgentActions nextMove(bool trainning = false) override;
         void start() override;
         void stop() override;
+        void generateDebugData(int trainningEpisode) override;
 };
 
 #endif

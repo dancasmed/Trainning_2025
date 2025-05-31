@@ -50,6 +50,11 @@ void Agent_Qlearning :: stop()
         dynamicEpsilon -= 0.002;
     }
 }
+void Agent_Qlearning :: generateDebugData(int trainningEpisode)
+{
+    throw std::logic_error("Not implemented");
+}
+
 
 AgentActions Agent_Qlearning::SelectAction()
 {

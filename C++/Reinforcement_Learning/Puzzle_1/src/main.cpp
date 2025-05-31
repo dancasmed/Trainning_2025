@@ -14,10 +14,10 @@
 using namespace std;
 
 // Tamaño de la cuadrícula
-const int GRID_SIZE = 9;
-const int TRAINNING_EPISODES = 1000;
+const int GRID_SIZE = 7;
+const int TRAINNING_EPISODES = 100;
 const int TEST_SPEED = 250; //milliseconds
-const bool SHOW_GRID_WHILE_TRAINING = true;
+const bool SHOW_GRID_WHILE_TRAINING = false;
 
 int main() {
     auto grid = std::make_unique<Grid>(GRID_SIZE, DifficultyLevel::VeryEasy, TEST_SPEED);
@@ -26,7 +26,7 @@ int main() {
     auto agent_Qlearning = std::make_unique<Agent_Qlearning>(grid.get());
     auto agent_GRPO = std::make_unique<Agent_GRPO>(grid.get());
 
-    IAgent* agentToTest = agent_Qlearning.get();
+    IAgent* agentToTest = agent_random.get();
 
     std::cout << "\033[2J\033[H"; // Limpiar la pantalla
     cout << "Entrenando al agente..." << endl;
@@ -34,10 +34,11 @@ int main() {
     std::cout << "\033[2J\033[H"; // Limpiar la pantalla
     grid->trainAgent(agentToTest, TRAINNING_EPISODES, SHOW_GRID_WHILE_TRAINING);
     cout<< "Training finished." << endl;
+    agentToTest->generateDebugData(1000);
     cout << "Probando al agente..." << endl;
     usleep(1000 * 1000);
-    std::cout << "\033[2J\033[H"; // Limpiar la pantalla
-    grid->testAgent(agentToTest);
+    //std::cout << "\033[2J\033[H"; // Limpiar la pantalla
+    //grid->testAgent(agentToTest);
 
     cout << "¡Entrenamiento y prueba completados!" << endl;
     return 0;

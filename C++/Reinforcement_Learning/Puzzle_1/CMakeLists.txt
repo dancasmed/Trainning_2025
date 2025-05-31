@@ -4,6 +4,9 @@ project(GridNavigationAgent LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -Wpedantic")
 
+# Para Homebrew/Conan/vcpkg
+find_package(nlohmann_json REQUIRED)
+
 # Agregar fuentes
 add_executable(solution 
     src/IAgent.cpp
@@ -18,3 +21,4 @@ add_executable(solution
 
 # Incluir directorios
 target_include_directories(solution PRIVATE include)
+target_link_libraries(solution PRIVATE nlohmann_json::nlohmann_json)

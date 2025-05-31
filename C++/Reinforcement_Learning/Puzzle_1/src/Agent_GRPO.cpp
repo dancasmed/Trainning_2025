@@ -89,6 +89,7 @@ AgentActions Agent_GRPO::nextMove(bool trainning)
             _policy[_grid->getAgentPosition().x][_grid->getAgentPosition().y][action] = std::clamp(_policy[_grid->getAgentPosition().x][_grid->getAgentPosition().y][action], 0.01, 0.99);
         }
     }
+
     result = GetBestAction();
     _grid->moveAgent(result);
 
@@ -103,6 +104,12 @@ void Agent_GRPO::stop()
 {
     
 }
+
+void Agent_GRPO :: generateDebugData(int trainningEpisode)
+{
+    throw std::logic_error("Not implemented");
+}
+
 
 void Agent_GRPO::InitializePolicy()
 {

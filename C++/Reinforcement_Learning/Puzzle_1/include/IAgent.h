@@ -16,7 +16,7 @@ class IAgent {
         virtual AgentActions nextMove(bool trainning = false) = 0;
         virtual void start() = 0;
         virtual void stop() = 0;
-        
+        virtual void generateDebugData(int trainningEpisode) = 0;
 };
 
 #endif
