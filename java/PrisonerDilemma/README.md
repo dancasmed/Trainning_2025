@@ -221,7 +221,16 @@ Yet, they still cooperate because:
 - Cooperation pays off in the long run
 
 ### 🧬 Evolution of Cooperation
-Axelrod showed that cooperation can evolve in a population of purely self-interested agents, simply by playing TitForTat-like strategies repeatedly.
+Robert Axelrod famously demonstrated that cooperation can emerge among purely self-interested agents, especially through repeated interactions using strategies like Tit-for-Tat.
+
+In the final generation of each simulation in this project, we often observe results like the following, strong evidence that AI can learn to cooperate without relying on exploitative or abusive tactics:
+```bash
+=== Generation 11 ===
+Final Global Scores:
+--------------------------------------------------
+NeuralStrategy_SingleLayer => 482183
+TitForTat => 479658
+```
 
 This suggests that cooperation doesn't require altruism — just smart rules encoded in DNA or learned behavior.
 
