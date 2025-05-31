@@ -1,60 +1,83 @@
 # Training 2025
 
-Welcome to **Training 2025**, a repository where I document my coding journey as I prepare for new opportunities in the tech industry. This project is a collection of various coding challenges, experiments, and projects across multiple technologies and domains. Each project is designed to sharpen my skills and explore new areas of software development.
+Welcome to **Training 2025**, a personal initiative to enhance and document my software development skills as I prepare for new opportunities in the tech industry. This repository encompasses a variety of projects and coding challenges across multiple programming languages and domains, reflecting my commitment to continuous learning and growth.
 
 ---
 
-## 🌟 Projects Overview
+## 📂 Repository Structure
 
-Here’s a glimpse of the diverse projects I’ve worked on so far:
+The repository is organized into the following directories:
 
-### 🔢 **Coding Puzzles**
-- **Description**: Solving algorithmic challenges to enhance problem solving skills.
-- **Technologies**: C#
-- **Repository Link**: [Coding Puzzles](https://github.com/dancasmed/Trainning_2025/tree/main/C%23/LeetCode_Problems)
+- **C#**
+  - `LeetCode_Problems/`: Solutions to various LeetCode algorithmic challenges, focusing on data structures and problem-solving techniques.
 
-### 🤖 **Reinforcement Learning**
-- **Description**: Implementing reinforcement learning algorithms to train agents in grid-based environments.
-- **Technologies**: C++
-- **Repository Link**: [Reinforcement Learning](https://github.com/dancasmed/Trainning_2025/tree/main/C%2B%2B/Reinforcement_Learning)
+- **C++**
+  - Implementations and experiments in C++, exploring core concepts and advanced features of the language.
 
-### ⚡ **High-Performance Systems**
-- **Description**: Building systems optimized for speed and scalability, focusing on efficient storage solutions.
-- **Technologies**: C++
-- **Repository Link**: [High-Performance Storage](https://github.com/dancasmed/Trainning_2025/tree/main/C%2B%2B/high_perf_storage)
-
-### 🎨 **Fractal Drawing**
-- **Description**: Exploring the beauty of fractals through code, generating intricate patterns and visualizations.
-- **Technologies**: C++
-- **Repository Link**: [Fractal Drawing](https://github.com/dancasmed/Trainning_2025/tree/main/C%2B%2B/Fractals)
+- **Java**
+  - `PrisonerDilemma/`: A simulation of the classic Prisoner's Dilemma problem, demonstrating concepts in game theory and decision-making strategies.
 
 ---
 
-## 🚀 Upcoming Projects
+## 🚀 Projects Overview
 
-I’m excited to expand this repository with more projects in the following areas:
+### 🔹 LeetCode Problems (C#)
 
-- **Game Theory**: Developing simulations and strategies to explore decision-making in competitive scenarios.
-- **Image Processing**: Experimenting with image manipulation techniques, such as filtering, edge detection, and transformations.
+- **Description**: A collection of solutions to LeetCode problems, aimed at improving algorithmic thinking and proficiency in C#.
+- **Highlights**:
+  - Covers a range of topics including arrays, strings, linked lists, and dynamic programming.
+  - Emphasizes clean code practices and efficient algorithms.
+
+### 🔹 Prisoner's Dilemma Simulation (Java)
+
+- **Description**: A Java-based simulation of the Prisoner's Dilemma, exploring cooperative and competitive strategies between agents.
+- **Features**:
+  - Configurable parameters for different simulation scenarios.
+  - Analysis of outcomes based on varying strategies.
+
+### 🔹 C++ Experiments
+
+- **Description**: A series of small projects and code snippets in C++, designed to delve into language-specific features and standard libraries.
+- **Focus Areas**:
+  - Memory management and pointers.
+  - Object-oriented programming principles.
+  - Standard Template Library (STL) usage.
 
 ---
 
-## 📚 Why This Repository?
+## 🛠️ Technologies Used
 
-This repository serves as both a portfolio and a learning tool. It showcases my ability to work with different programming languages, frameworks, and problem domains while also providing a space for experimentation and growth. Whether you’re here to learn, collaborate, or just explore, I hope you find something valuable in this collection.
+- **Languages**: C#, C++, Java
+- **Tools & Platforms**:
+  - Visual Studio Code
+  - Git & GitHub for version control
+  - JDK for Java development
+  - .NET SDK for C# projects
 
 ---
 
-## 🤝 Contributions
+## 📈 Progress and Future Plans
 
-While this repository is primarily a personal project, I welcome feedback, suggestions, and ideas for improvement. Feel free to open an issue or reach out if you’d like to discuss any of the projects or propose new ones.
+This repository is a living document of my learning journey. Upcoming additions include:
+
+- Implementing design patterns in C# and Java.
+- Exploring advanced C++ topics like multithreading and concurrency.
+- Building small full-stack applications to integrate front-end and back-end skills.
+
+---
+
+## 🤝 Contributing
+
+While this is a personal project, I welcome feedback and suggestions. If you find any issues or have ideas for improvement, feel free to open an issue or submit a pull request.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Thank you for visiting **Training 2025**! I hope you enjoy exploring the projects as much as I enjoyed creating them. Happy coding! 🚀
+## 📬 Contact
+
+For any inquiries or collaboration opportunities, please reach out via [GitHub](https://github.com/dancasmed).
