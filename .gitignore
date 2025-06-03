@@ -17,3 +17,8 @@ C++/.DS_Store
 C++/Fractals/KochCurve/build
 C++/Spirograph/build
 java/PrisonerDilemma/bin
+python/crypto_trading_rl/data/cache
+python/crypto_trading_rl/api/__pycache__
+python/crypto_trading_rl/llm/__pycache__
+python/crypto_trading_rl/news/__pycache__
+python/crypto_trading_rl/utils/__pycache__
