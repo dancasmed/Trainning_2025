@@ -14,8 +14,8 @@ DATA_DIR = "data/cache"
 os.makedirs(DATA_DIR, exist_ok=True)
 
 def main():
-    username = "dancasmed@gmail.com"
-    password = "Mictlantecutli120$"
+    username = "mail"
+    password = "password"
 
     crypto_symbols = ["DOGE", "BTC", "ETH", "XRP", "LTC", "SOL", "ADA", "DOT", "SHIB"]
     
