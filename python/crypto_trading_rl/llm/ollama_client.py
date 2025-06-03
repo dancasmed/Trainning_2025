@@ -1,13 +1,16 @@
 # llm/ollama_client.py
 import requests
 import json
-
+import time
 from datetime import datetime, timedelta
 
 class OllamaClient:
-    def __init__(self, model):
+    def __init__(self, model, max_retries=3, retry_delay=2, timeout=60):
         self.model = model
         self.url = "http://localhost:11434/api/generate"
+        self.max_retries = max_retries
+        self.retry_delay = retry_delay
+        self.timeout = timeout  # segundos
 
     def generate(self, prompt):
         payload = {
@@ -15,16 +18,27 @@ class OllamaClient:
             "prompt": prompt,
             "stream": False
         }
-        response = requests.post(self.url, json=payload)
-        if response.status_code == 200:
-            return json.loads(response.text)['response']
-        else:
-            raise Exception(f"Ollama error: {response.text}")
+
+        for attempt in range(1, self.max_retries + 1):
+            try:
+                response = requests.post(self.url, json=payload, timeout=self.timeout)
+                if response.status_code == 200:
+                    return json.loads(response.text)['response']
+                else:
+                    print(f"[!] Attempt {attempt} failed with status code {response.status_code}: {response.text}")
+            except (requests.ConnectionError, requests.Timeout) as e:
+                print(f"[!] Connection error on attempt {attempt}: {str(e)}")
+            
+            if attempt < self.max_retries:
+                print(f"Retrying in {self.retry_delay} seconds...")
+                time.sleep(self.retry_delay)
+
+        raise Exception("Failed to get response from Ollama after multiple attempts")
 
     def classify_sentiment(self, text):
         prompt = (
             "Classify the following financial news article as either "
-            "'positive', 'neutral', or 'negative':\n\n" + text
+            "'positive', 'neutral', or 'negative':\n\n" + text[:2000]  # Limitar texto
         )
         result = self.generate(prompt).lower()
         if "positive" in result:
@@ -33,14 +47,12 @@ class OllamaClient:
             return "negative"
         else:
             return "neutral"
-        
+
     def generate_search_query(self, asset):
         today = datetime.utcnow().date()
         start_date = today - timedelta(days=7)
-        
-        # Format dates in YYYY-MM-DD for compatibility with search syntax
         after = start_date.isoformat()
-        before = (today + timedelta(days=1)).isoformat()  # To include today's full day
+        before = (today + timedelta(days=1)).isoformat()
 
         prompt = f"""
     Generate a concise and highly optimized Google News search query to find headlines published after:{after} and before:{before} that could influence the price or market sentiment of {asset} crypto.

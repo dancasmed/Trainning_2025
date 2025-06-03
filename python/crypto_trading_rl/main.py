@@ -7,6 +7,7 @@ from news.news_pipeline import NewsPipeline
 import os
 
 from utils.html_to_markdown import url_to_markdown
+from utils.thermal_helper import get_thermal_pressure_level
 
 
 
@@ -23,6 +24,7 @@ def main():
     pipeline = NewsPipeline(ollama_model="gemma3:27b")  # Puedes cambiar modelo si deseas
     
     for symbol in crypto_symbols:
+        get_thermal_pressure_level()
         interval = "5minute"
         
         # Get current price

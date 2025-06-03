@@ -1,9 +1,13 @@
 # news/sentiment_analyzer.py
+from time import sleep
 from llm.ollama_client import OllamaClient
 
 import os
 import json
 import threading
+
+from utils.logger import Logger
+from utils.thermal_helper import get_thermal_pressure_level
 
 
 class SentimentAnalyzer:
@@ -13,14 +17,25 @@ class SentimentAnalyzer:
         self.client = OllamaClient(model=model)
 
     def analyze_headlines(self, news_items, asset, directory="data/cache"):
+        count = 0
         for item in news_items:
+            count += 1
             # Clasificar usando 'full_text' en lugar de 'title'
             sentiment = self.client.classify_sentiment(item.get('full_text', ''))
             item['sentiment'] = sentiment
+            item['processed'] = True  # Marcar como procesado
+            print(f"[✓] Sentiment for '{item['title']}' classified as: {sentiment}")
 
             # Guardar actualización en el archivo correspondiente
             self.update_news_item(item, asset, directory)
+            
+            
 
+            if count % 5 == 0:
+                Logger.debug_print(f"[✓] Percentage of news items processed: {count / len(news_items) * 100:.2f}%")
+                level = get_thermal_pressure_level()
+                
+                
         return [item['sentiment'] for item in news_items]
 
 
