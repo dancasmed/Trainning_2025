@@ -2,14 +2,17 @@
 import requests
 import json
 import time
+import random
 from datetime import datetime, timedelta
 
+from utils.thermal_helper import get_thermal_pressure_level
+
 class OllamaClient:
-    def __init__(self, model, max_retries=3, retry_delay=2, timeout=60):
+    def __init__(self, model, max_retries=3, max_retry_delay=15, timeout=60):
         self.model = model
         self.url = "http://localhost:11434/api/generate"
         self.max_retries = max_retries
-        self.retry_delay = retry_delay
+        self.max_retry_delay = max_retry_delay
         self.timeout = timeout  # segundos
 
     def generate(self, prompt):
@@ -20,6 +23,7 @@ class OllamaClient:
         }
 
         for attempt in range(1, self.max_retries + 1):
+            get_thermal_pressure_level()
             try:
                 response = requests.post(self.url, json=payload, timeout=self.timeout)
                 if response.status_code == 200:
@@ -30,8 +34,9 @@ class OllamaClient:
                 print(f"[!] Connection error on attempt {attempt}: {str(e)}")
             
             if attempt < self.max_retries:
-                print(f"Retrying in {self.retry_delay} seconds...")
-                time.sleep(self.retry_delay)
+                current_delay = random.randint(5, self.max_retry_delay) * attempt  # Incremental backoff
+                print(f"Retrying in {current_delay} seconds...")
+                time.sleep(current_delay)
 
         raise Exception("Failed to get response from Ollama after multiple attempts")
 
